@@ -1,5 +1,7 @@
 // USB HID core
 /*
+ * RENC Debounce ver 1.1 (2016/01/04)
+ *   読みこぼし防止のため、速く回しすぎたことによるオーバースピードエラーに対処した。
  * RENC Debounce ver 1.0 (2016/01/04)
  *   「REVIVE USB Debounce ver 1.4」をベースにロータリーエンコーダへ対応した。
  */
@@ -129,7 +131,7 @@ void YourLowPriorityISRCode();
 
 /** VARIABLES ******************************************************/
 #pragma udata
-char c_version[]="RD1.0";
+char c_version[]="RD1.1";
 BYTE mouse_buffer[4];
 BYTE joystick_buffer[4];
 BYTE keyboard_buffer[8]; 
@@ -144,7 +146,8 @@ unsigned char button_state_set1 = 0;
 unsigned char button_state_set2 = 0;
 unsigned char button_pressing_count[NUM_OF_PINS][2];
 //const char renc_dir[] = { 0,1,-1,0,-1,0,0,1,1,0,0,-1,0,-1,1,0 }; //変換テーブル
-unsigned int renc_pre_state = 0;
+unsigned int renc_pre_r_code = 0;
+unsigned int renc_pre_result = 0;
 
 char mouse_move_up;
 char mouse_move_down;
@@ -347,10 +350,10 @@ unsigned char ToSendDataBuffer[64];
 					if(((eeprom_conv_for_renc & (0x01 << (fi/2))) ? 1:0))
 					{
 						tmp_u16 = (button_state_set_full >> fi) & 0x0003;
-						//A相とB相のビットが逆順になってるのでビットを逆転
+						//A相とB相のビットが逆順になっているのでビットを逆転
 						tmp_u16 = ((tmp_u16 & 0x0002) >> 1) | ((tmp_u16 & 0x0001) << 1);
 						//回転方向の検知（前回と今回を比較）
-						switch((renc_pre_state >> fi) & 0x0003)
+						switch((renc_pre_r_code >> fi) & 0x0003)
 						{
 							case 0: tmp_8 = (tmp_u16 == 0) ?  0 : (tmp_u16 == 1) ?  1 : (tmp_u16 == 2) ? -1 : -2; break;
 							case 1: tmp_8 = (tmp_u16 == 0) ? -1 : (tmp_u16 == 1) ?  0 : (tmp_u16 == 2) ?  3 :  1; break;
@@ -362,19 +365,25 @@ unsigned char ToSendDataBuffer[64];
 						switch(tmp_8)
 						{
 							case 0: //静止（A相＝0、B相＝0として扱う）
+								renc_pre_result &= ~(0x0003 << fi);
 								break;
 							case 1: //正転（A相＝1、B相＝0として扱う）
 								button_state_set_full |= (0x0001 << fi);
+								renc_pre_result &= ~(0x0003 << fi);
+								renc_pre_result |= (0x0001 << fi);
 								break;
 							case -1: //逆転（A相＝0、B相＝1として扱う）
 								button_state_set_full |= (0x0002 << fi);
+								renc_pre_result &= ~(0x0003 << fi);
+								renc_pre_result |= (0x0002 << fi);
 								break;
-							case -2: //無効（オーバースピードエラー。A相＝0、B相＝0として扱う）
+							case -2: //無効（オーバースピードエラー。読みこぼしを防ぐために前回と同じように扱う）
+								button_state_set_full |= (renc_pre_result & (0x0003 << fi));
 								break;
 						}
 						//次の回転方向の検知に使用するコードを保存
-						renc_pre_state &= ~(0x0003 << fi);
-						renc_pre_state |= (tmp_u16 << fi);
+						renc_pre_r_code &= ~(0x0003 << fi);
+						renc_pre_r_code |= (tmp_u16 << fi);
 					}
 				}
 				if(((button_state_set_full & (0x0001 << fi)) ? 1:0))
