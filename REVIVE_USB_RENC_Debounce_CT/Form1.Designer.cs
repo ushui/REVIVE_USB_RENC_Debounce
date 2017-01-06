@@ -36,6 +36,16 @@ namespace HID_PnP_Demo
             this.ToggleLEDToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.PushbuttonStateTooltip = new System.Windows.Forms.ToolTip(this.components);
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.RotaryEncoderSetting_grpbox = new System.Windows.Forms.GroupBox();
+            this.check_count_renc_numUpDown = new System.Windows.Forms.NumericUpDown();
+            this.RotaryEncoder4_cbox = new System.Windows.Forms.CheckBox();
+            this.renc_check_count_lbl1 = new System.Windows.Forms.Label();
+            this.RotaryEncoder5_cbox = new System.Windows.Forms.CheckBox();
+            this.RotaryEncoder6_cbox = new System.Windows.Forms.CheckBox();
+            this.RotaryEncoder3_cbox = new System.Windows.Forms.CheckBox();
+            this.renc_check_count_lbl2 = new System.Windows.Forms.Label();
+            this.RotaryEncoder2_cbox = new System.Windows.Forms.CheckBox();
+            this.RotaryEncoder1_cbox = new System.Windows.Forms.CheckBox();
             this.toolTip2 = new System.Windows.Forms.ToolTip(this.components);
             this.MouseMove_UD = new System.Windows.Forms.NumericUpDown();
             this.Button12_cbox = new System.Windows.Forms.CheckBox();
@@ -136,21 +146,15 @@ namespace HID_PnP_Demo
             this.Pin06A_pb = new System.Windows.Forms.PictureBox();
             this.BackGround_pb = new System.Windows.Forms.PictureBox();
             this.smpl_interval_lbl1 = new System.Windows.Forms.Label();
-            this.check_count_lbl1 = new System.Windows.Forms.Label();
             this.smpl_interval_numUpDown = new System.Windows.Forms.NumericUpDown();
-            this.check_count_numUpDown = new System.Windows.Forms.NumericUpDown();
-            this.check_count_lbl2 = new System.Windows.Forms.Label();
             this.smpl_interval_lbl2 = new System.Windows.Forms.Label();
             this.fw_version_lbl = new System.Windows.Forms.Label();
             this.AllButtonSetting_grpbox = new System.Windows.Forms.GroupBox();
-            this.RotaryEncoderSetting_grpbox = new System.Windows.Forms.GroupBox();
-            this.RotaryEncoder4_cbox = new System.Windows.Forms.CheckBox();
-            this.RotaryEncoder5_cbox = new System.Windows.Forms.CheckBox();
-            this.RotaryEncoder6_cbox = new System.Windows.Forms.CheckBox();
-            this.RotaryEncoder3_cbox = new System.Windows.Forms.CheckBox();
-            this.RotaryEncoder2_cbox = new System.Windows.Forms.CheckBox();
-            this.RotaryEncoder1_cbox = new System.Windows.Forms.CheckBox();
-            this.RotaryEncoderSetting_lbl = new System.Windows.Forms.Label();
+            this.check_count_numUpDown = new System.Windows.Forms.NumericUpDown();
+            this.check_count_lbl1 = new System.Windows.Forms.Label();
+            this.check_count_lbl2 = new System.Windows.Forms.Label();
+            this.RotaryEncoderSetting_grpbox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.check_count_renc_numUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MouseMove_UD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonPressIcon12)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonPressIcon11)).BeginInit();
@@ -200,9 +204,8 @@ namespace HID_PnP_Demo
             ((System.ComponentModel.ISupportInitialize)(this.Pin06A_pb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackGround_pb)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.smpl_interval_numUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.check_count_numUpDown)).BeginInit();
             this.AllButtonSetting_grpbox.SuspendLayout();
-            this.RotaryEncoderSetting_grpbox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.check_count_numUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // ReadWriteThread
@@ -250,6 +253,134 @@ namespace HID_PnP_Demo
             this.toolTip1.AutoPopDelay = 20000;
             this.toolTip1.InitialDelay = 15;
             this.toolTip1.ReshowDelay = 15;
+            // 
+            // RotaryEncoderSetting_grpbox
+            // 
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.check_count_renc_numUpDown);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder4_cbox);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.renc_check_count_lbl1);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder5_cbox);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder6_cbox);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder3_cbox);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.renc_check_count_lbl2);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder2_cbox);
+            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder1_cbox);
+            this.RotaryEncoderSetting_grpbox.Enabled = false;
+            this.RotaryEncoderSetting_grpbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
+            this.RotaryEncoderSetting_grpbox.Location = new System.Drawing.Point(389, 375);
+            this.RotaryEncoderSetting_grpbox.Name = "RotaryEncoderSetting_grpbox";
+            this.RotaryEncoderSetting_grpbox.Size = new System.Drawing.Size(144, 96);
+            this.RotaryEncoderSetting_grpbox.TabIndex = 173;
+            this.RotaryEncoderSetting_grpbox.TabStop = false;
+            this.RotaryEncoderSetting_grpbox.Text = "RotaryEncoderSetting";
+            // 
+            // check_count_renc_numUpDown
+            // 
+            this.check_count_renc_numUpDown.Location = new System.Drawing.Point(83, 70);
+            this.check_count_renc_numUpDown.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.check_count_renc_numUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.check_count_renc_numUpDown.Name = "check_count_renc_numUpDown";
+            this.check_count_renc_numUpDown.Size = new System.Drawing.Size(38, 19);
+            this.check_count_renc_numUpDown.TabIndex = 171;
+            this.check_count_renc_numUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // RotaryEncoder4_cbox
+            // 
+            this.RotaryEncoder4_cbox.AutoSize = true;
+            this.RotaryEncoder4_cbox.Location = new System.Drawing.Point(70, 50);
+            this.RotaryEncoder4_cbox.Name = "RotaryEncoder4_cbox";
+            this.RotaryEncoder4_cbox.Size = new System.Drawing.Size(56, 16);
+            this.RotaryEncoder4_cbox.TabIndex = 176;
+            this.RotaryEncoder4_cbox.Text = "7P/8P";
+            this.RotaryEncoder4_cbox.UseVisualStyleBackColor = true;
+            this.RotaryEncoder4_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder4_cbox_CheckedChanged);
+            // 
+            // renc_check_count_lbl1
+            // 
+            this.renc_check_count_lbl1.AutoSize = true;
+            this.renc_check_count_lbl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
+            this.renc_check_count_lbl1.Location = new System.Drawing.Point(5, 72);
+            this.renc_check_count_lbl1.Name = "renc_check_count_lbl1";
+            this.renc_check_count_lbl1.Size = new System.Drawing.Size(77, 12);
+            this.renc_check_count_lbl1.TabIndex = 170;
+            this.renc_check_count_lbl1.Text = "一致検出回数";
+            // 
+            // RotaryEncoder5_cbox
+            // 
+            this.RotaryEncoder5_cbox.AutoSize = true;
+            this.RotaryEncoder5_cbox.Location = new System.Drawing.Point(70, 34);
+            this.RotaryEncoder5_cbox.Name = "RotaryEncoder5_cbox";
+            this.RotaryEncoder5_cbox.Size = new System.Drawing.Size(62, 16);
+            this.RotaryEncoder5_cbox.TabIndex = 179;
+            this.RotaryEncoder5_cbox.Text = "9P/10P";
+            this.RotaryEncoder5_cbox.UseVisualStyleBackColor = true;
+            this.RotaryEncoder5_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder6_cbox_CheckedChanged);
+            // 
+            // RotaryEncoder6_cbox
+            // 
+            this.RotaryEncoder6_cbox.AutoSize = true;
+            this.RotaryEncoder6_cbox.Location = new System.Drawing.Point(70, 18);
+            this.RotaryEncoder6_cbox.Name = "RotaryEncoder6_cbox";
+            this.RotaryEncoder6_cbox.Size = new System.Drawing.Size(68, 16);
+            this.RotaryEncoder6_cbox.TabIndex = 178;
+            this.RotaryEncoder6_cbox.Text = "11P/12P";
+            this.RotaryEncoder6_cbox.UseVisualStyleBackColor = true;
+            this.RotaryEncoder6_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder5_cbox_CheckedChanged);
+            // 
+            // RotaryEncoder3_cbox
+            // 
+            this.RotaryEncoder3_cbox.AutoSize = true;
+            this.RotaryEncoder3_cbox.Location = new System.Drawing.Point(7, 50);
+            this.RotaryEncoder3_cbox.Name = "RotaryEncoder3_cbox";
+            this.RotaryEncoder3_cbox.Size = new System.Drawing.Size(56, 16);
+            this.RotaryEncoder3_cbox.TabIndex = 177;
+            this.RotaryEncoder3_cbox.Text = "5P/6P";
+            this.RotaryEncoder3_cbox.UseVisualStyleBackColor = true;
+            this.RotaryEncoder3_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder3_cbox_CheckedChanged);
+            // 
+            // renc_check_count_lbl2
+            // 
+            this.renc_check_count_lbl2.AutoSize = true;
+            this.renc_check_count_lbl2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
+            this.renc_check_count_lbl2.Location = new System.Drawing.Point(122, 72);
+            this.renc_check_count_lbl2.Name = "renc_check_count_lbl2";
+            this.renc_check_count_lbl2.Size = new System.Drawing.Size(17, 12);
+            this.renc_check_count_lbl2.TabIndex = 172;
+            this.renc_check_count_lbl2.Text = "回";
+            // 
+            // RotaryEncoder2_cbox
+            // 
+            this.RotaryEncoder2_cbox.AutoSize = true;
+            this.RotaryEncoder2_cbox.Location = new System.Drawing.Point(7, 34);
+            this.RotaryEncoder2_cbox.Name = "RotaryEncoder2_cbox";
+            this.RotaryEncoder2_cbox.Size = new System.Drawing.Size(56, 16);
+            this.RotaryEncoder2_cbox.TabIndex = 175;
+            this.RotaryEncoder2_cbox.Text = "3P/4P";
+            this.RotaryEncoder2_cbox.UseVisualStyleBackColor = true;
+            this.RotaryEncoder2_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder2_cbox_CheckedChanged);
+            // 
+            // RotaryEncoder1_cbox
+            // 
+            this.RotaryEncoder1_cbox.AutoSize = true;
+            this.RotaryEncoder1_cbox.Location = new System.Drawing.Point(7, 18);
+            this.RotaryEncoder1_cbox.Name = "RotaryEncoder1_cbox";
+            this.RotaryEncoder1_cbox.Size = new System.Drawing.Size(56, 16);
+            this.RotaryEncoder1_cbox.TabIndex = 174;
+            this.RotaryEncoder1_cbox.Text = "1P/2P";
+            this.RotaryEncoder1_cbox.UseVisualStyleBackColor = true;
+            this.RotaryEncoder1_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder1_cbox_CheckedChanged);
             // 
             // toolTip2
             // 
@@ -1460,25 +1591,15 @@ namespace HID_PnP_Demo
             // 
             this.smpl_interval_lbl1.AutoSize = true;
             this.smpl_interval_lbl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
-            this.smpl_interval_lbl1.Location = new System.Drawing.Point(11, 27);
+            this.smpl_interval_lbl1.Location = new System.Drawing.Point(6, 27);
             this.smpl_interval_lbl1.Name = "smpl_interval_lbl1";
             this.smpl_interval_lbl1.Size = new System.Drawing.Size(82, 12);
             this.smpl_interval_lbl1.TabIndex = 164;
             this.smpl_interval_lbl1.Text = "サンプリング周期";
             // 
-            // check_count_lbl1
-            // 
-            this.check_count_lbl1.AutoSize = true;
-            this.check_count_lbl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
-            this.check_count_lbl1.Location = new System.Drawing.Point(16, 61);
-            this.check_count_lbl1.Name = "check_count_lbl1";
-            this.check_count_lbl1.Size = new System.Drawing.Size(77, 12);
-            this.check_count_lbl1.TabIndex = 165;
-            this.check_count_lbl1.Text = "一致検出回数";
-            // 
             // smpl_interval_numUpDown
             // 
-            this.smpl_interval_numUpDown.Location = new System.Drawing.Point(94, 25);
+            this.smpl_interval_numUpDown.Location = new System.Drawing.Point(89, 25);
             this.smpl_interval_numUpDown.Maximum = new decimal(new int[] {
             174,
             0,
@@ -1498,43 +1619,11 @@ namespace HID_PnP_Demo
             0,
             0});
             // 
-            // check_count_numUpDown
-            // 
-            this.check_count_numUpDown.Location = new System.Drawing.Point(94, 59);
-            this.check_count_numUpDown.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.check_count_numUpDown.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.check_count_numUpDown.Name = "check_count_numUpDown";
-            this.check_count_numUpDown.Size = new System.Drawing.Size(38, 19);
-            this.check_count_numUpDown.TabIndex = 167;
-            this.check_count_numUpDown.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // check_count_lbl2
-            // 
-            this.check_count_lbl2.AutoSize = true;
-            this.check_count_lbl2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
-            this.check_count_lbl2.Location = new System.Drawing.Point(133, 61);
-            this.check_count_lbl2.Name = "check_count_lbl2";
-            this.check_count_lbl2.Size = new System.Drawing.Size(17, 12);
-            this.check_count_lbl2.TabIndex = 168;
-            this.check_count_lbl2.Text = "回";
-            // 
             // smpl_interval_lbl2
             // 
             this.smpl_interval_lbl2.AutoSize = true;
             this.smpl_interval_lbl2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
-            this.smpl_interval_lbl2.Location = new System.Drawing.Point(133, 27);
+            this.smpl_interval_lbl2.Location = new System.Drawing.Point(128, 27);
             this.smpl_interval_lbl2.Name = "smpl_interval_lbl2";
             this.smpl_interval_lbl2.Size = new System.Drawing.Size(20, 12);
             this.smpl_interval_lbl2.TabIndex = 169;
@@ -1563,103 +1652,52 @@ namespace HID_PnP_Demo
             this.AllButtonSetting_grpbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
             this.AllButtonSetting_grpbox.Location = new System.Drawing.Point(228, 375);
             this.AllButtonSetting_grpbox.Name = "AllButtonSetting_grpbox";
-            this.AllButtonSetting_grpbox.Size = new System.Drawing.Size(162, 96);
+            this.AllButtonSetting_grpbox.Size = new System.Drawing.Size(155, 96);
             this.AllButtonSetting_grpbox.TabIndex = 171;
             this.AllButtonSetting_grpbox.TabStop = false;
             this.AllButtonSetting_grpbox.Text = "AllButtonSetting";
             // 
-            // RotaryEncoderSetting_grpbox
+            // check_count_numUpDown
             // 
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder4_cbox);
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder5_cbox);
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder6_cbox);
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder3_cbox);
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder2_cbox);
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoder1_cbox);
-            this.RotaryEncoderSetting_grpbox.Controls.Add(this.RotaryEncoderSetting_lbl);
-            this.RotaryEncoderSetting_grpbox.Enabled = false;
-            this.RotaryEncoderSetting_grpbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
-            this.RotaryEncoderSetting_grpbox.Location = new System.Drawing.Point(396, 375);
-            this.RotaryEncoderSetting_grpbox.Name = "RotaryEncoderSetting_grpbox";
-            this.RotaryEncoderSetting_grpbox.Size = new System.Drawing.Size(137, 96);
-            this.RotaryEncoderSetting_grpbox.TabIndex = 173;
-            this.RotaryEncoderSetting_grpbox.TabStop = false;
-            this.RotaryEncoderSetting_grpbox.Text = "RotaryEncoderSetting";
+            this.check_count_numUpDown.Location = new System.Drawing.Point(89, 59);
+            this.check_count_numUpDown.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.check_count_numUpDown.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.check_count_numUpDown.Name = "check_count_numUpDown";
+            this.check_count_numUpDown.Size = new System.Drawing.Size(38, 19);
+            this.check_count_numUpDown.TabIndex = 167;
+            this.check_count_numUpDown.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
             // 
-            // RotaryEncoder4_cbox
+            // check_count_lbl1
             // 
-            this.RotaryEncoder4_cbox.AutoSize = true;
-            this.RotaryEncoder4_cbox.Location = new System.Drawing.Point(69, 74);
-            this.RotaryEncoder4_cbox.Name = "RotaryEncoder4_cbox";
-            this.RotaryEncoder4_cbox.Size = new System.Drawing.Size(56, 16);
-            this.RotaryEncoder4_cbox.TabIndex = 176;
-            this.RotaryEncoder4_cbox.Text = "7P/8P";
-            this.RotaryEncoder4_cbox.UseVisualStyleBackColor = true;
-            this.RotaryEncoder4_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder4_cbox_CheckedChanged);
+            this.check_count_lbl1.AutoSize = true;
+            this.check_count_lbl1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
+            this.check_count_lbl1.Location = new System.Drawing.Point(11, 61);
+            this.check_count_lbl1.Name = "check_count_lbl1";
+            this.check_count_lbl1.Size = new System.Drawing.Size(77, 12);
+            this.check_count_lbl1.TabIndex = 165;
+            this.check_count_lbl1.Text = "一致検出回数";
             // 
-            // RotaryEncoder5_cbox
+            // check_count_lbl2
             // 
-            this.RotaryEncoder5_cbox.AutoSize = true;
-            this.RotaryEncoder5_cbox.Location = new System.Drawing.Point(69, 58);
-            this.RotaryEncoder5_cbox.Name = "RotaryEncoder5_cbox";
-            this.RotaryEncoder5_cbox.Size = new System.Drawing.Size(62, 16);
-            this.RotaryEncoder5_cbox.TabIndex = 179;
-            this.RotaryEncoder5_cbox.Text = "9P/10P";
-            this.RotaryEncoder5_cbox.UseVisualStyleBackColor = true;
-            this.RotaryEncoder5_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder6_cbox_CheckedChanged);
-            // 
-            // RotaryEncoder6_cbox
-            // 
-            this.RotaryEncoder6_cbox.AutoSize = true;
-            this.RotaryEncoder6_cbox.Location = new System.Drawing.Point(69, 42);
-            this.RotaryEncoder6_cbox.Name = "RotaryEncoder6_cbox";
-            this.RotaryEncoder6_cbox.Size = new System.Drawing.Size(68, 16);
-            this.RotaryEncoder6_cbox.TabIndex = 178;
-            this.RotaryEncoder6_cbox.Text = "11P/12P";
-            this.RotaryEncoder6_cbox.UseVisualStyleBackColor = true;
-            this.RotaryEncoder6_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder5_cbox_CheckedChanged);
-            // 
-            // RotaryEncoder3_cbox
-            // 
-            this.RotaryEncoder3_cbox.AutoSize = true;
-            this.RotaryEncoder3_cbox.Location = new System.Drawing.Point(6, 74);
-            this.RotaryEncoder3_cbox.Name = "RotaryEncoder3_cbox";
-            this.RotaryEncoder3_cbox.Size = new System.Drawing.Size(56, 16);
-            this.RotaryEncoder3_cbox.TabIndex = 177;
-            this.RotaryEncoder3_cbox.Text = "5P/6P";
-            this.RotaryEncoder3_cbox.UseVisualStyleBackColor = true;
-            this.RotaryEncoder3_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder3_cbox_CheckedChanged);
-            // 
-            // RotaryEncoder2_cbox
-            // 
-            this.RotaryEncoder2_cbox.AutoSize = true;
-            this.RotaryEncoder2_cbox.Location = new System.Drawing.Point(6, 58);
-            this.RotaryEncoder2_cbox.Name = "RotaryEncoder2_cbox";
-            this.RotaryEncoder2_cbox.Size = new System.Drawing.Size(56, 16);
-            this.RotaryEncoder2_cbox.TabIndex = 175;
-            this.RotaryEncoder2_cbox.Text = "3P/4P";
-            this.RotaryEncoder2_cbox.UseVisualStyleBackColor = true;
-            this.RotaryEncoder2_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder2_cbox_CheckedChanged);
-            // 
-            // RotaryEncoder1_cbox
-            // 
-            this.RotaryEncoder1_cbox.AutoSize = true;
-            this.RotaryEncoder1_cbox.Location = new System.Drawing.Point(6, 42);
-            this.RotaryEncoder1_cbox.Name = "RotaryEncoder1_cbox";
-            this.RotaryEncoder1_cbox.Size = new System.Drawing.Size(56, 16);
-            this.RotaryEncoder1_cbox.TabIndex = 174;
-            this.RotaryEncoder1_cbox.Text = "1P/2P";
-            this.RotaryEncoder1_cbox.UseVisualStyleBackColor = true;
-            this.RotaryEncoder1_cbox.CheckedChanged += new System.EventHandler(this.RotaryEncoder1_cbox_CheckedChanged);
-            // 
-            // RotaryEncoderSetting_lbl
-            // 
-            this.RotaryEncoderSetting_lbl.AutoSize = true;
-            this.RotaryEncoderSetting_lbl.Location = new System.Drawing.Point(6, 15);
-            this.RotaryEncoderSetting_lbl.Name = "RotaryEncoderSetting_lbl";
-            this.RotaryEncoderSetting_lbl.Size = new System.Drawing.Size(96, 24);
-            this.RotaryEncoderSetting_lbl.TabIndex = 173;
-            this.RotaryEncoderSetting_lbl.Text = "下記のピンを\r\nA相/B相として扱う";
+            this.check_count_lbl2.AutoSize = true;
+            this.check_count_lbl2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(106)))), ((int)(((byte)(106)))), ((int)(((byte)(106)))));
+            this.check_count_lbl2.Location = new System.Drawing.Point(128, 61);
+            this.check_count_lbl2.Name = "check_count_lbl2";
+            this.check_count_lbl2.Size = new System.Drawing.Size(17, 12);
+            this.check_count_lbl2.TabIndex = 168;
+            this.check_count_lbl2.Text = "回";
             // 
             // Form1
             // 
@@ -1775,7 +1813,10 @@ namespace HID_PnP_Demo
             this.MaximumSize = new System.Drawing.Size(894, 538);
             this.MinimizeBox = false;
             this.Name = "Form1";
-            this.Text = "REVIVE USB RENC Debounce, Configuration Tool ver 1.0.0";
+            this.Text = "REVIVE USB RENC Debounce, Configuration Tool ver 1.1.0";
+            this.RotaryEncoderSetting_grpbox.ResumeLayout(false);
+            this.RotaryEncoderSetting_grpbox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.check_count_renc_numUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MouseMove_UD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonPressIcon12)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ButtonPressIcon11)).EndInit();
@@ -1825,11 +1866,9 @@ namespace HID_PnP_Demo
             ((System.ComponentModel.ISupportInitialize)(this.Pin06A_pb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.BackGround_pb)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.smpl_interval_numUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.check_count_numUpDown)).EndInit();
             this.AllButtonSetting_grpbox.ResumeLayout(false);
             this.AllButtonSetting_grpbox.PerformLayout();
-            this.RotaryEncoderSetting_grpbox.ResumeLayout(false);
-            this.RotaryEncoderSetting_grpbox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.check_count_numUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1943,21 +1982,23 @@ namespace HID_PnP_Demo
         private System.Windows.Forms.Label DeviceAssign_lbl12;
         private System.Windows.Forms.PictureBox BackGround_pb;
         private System.Windows.Forms.Label smpl_interval_lbl1;
-        private System.Windows.Forms.Label check_count_lbl1;
         private System.Windows.Forms.NumericUpDown smpl_interval_numUpDown;
-        private System.Windows.Forms.NumericUpDown check_count_numUpDown;
-        private System.Windows.Forms.Label check_count_lbl2;
         private System.Windows.Forms.Label smpl_interval_lbl2;
         private System.Windows.Forms.Label fw_version_lbl;
         private System.Windows.Forms.GroupBox AllButtonSetting_grpbox;
         private System.Windows.Forms.GroupBox RotaryEncoderSetting_grpbox;
-        private System.Windows.Forms.Label RotaryEncoderSetting_lbl;
         private System.Windows.Forms.CheckBox RotaryEncoder5_cbox;
         private System.Windows.Forms.CheckBox RotaryEncoder3_cbox;
         private System.Windows.Forms.CheckBox RotaryEncoder4_cbox;
         private System.Windows.Forms.CheckBox RotaryEncoder6_cbox;
         private System.Windows.Forms.CheckBox RotaryEncoder2_cbox;
         private System.Windows.Forms.CheckBox RotaryEncoder1_cbox;
+        private System.Windows.Forms.NumericUpDown check_count_numUpDown;
+        private System.Windows.Forms.Label check_count_lbl1;
+        private System.Windows.Forms.Label check_count_lbl2;
+        private System.Windows.Forms.NumericUpDown check_count_renc_numUpDown;
+        private System.Windows.Forms.Label renc_check_count_lbl1;
+        private System.Windows.Forms.Label renc_check_count_lbl2;
     }
 }
 

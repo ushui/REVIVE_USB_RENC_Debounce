@@ -1,5 +1,8 @@
 // USB HID core
 /*
+ * RENC Debounce ver 2.0 (2016/01/06)
+ *   ロータリーエンコーダに対して、通常とは異なる一致検出回数を設定できる機能を追加した。
+ *   オーバースピードエラーの対処に抜けがあったバグを修正した。
  * RENC Debounce ver 1.2 (2016/01/05)
  *   PIN9以降の出力がPIN8の設定と同じになるバグなどを修正した。
  * RENC Debounce ver 1.1 (2016/01/04)
@@ -133,7 +136,7 @@ void YourLowPriorityISRCode();
 
 /** VARIABLES ******************************************************/
 #pragma udata
-char c_version[]="RD1.2";
+char c_version[]="RD2.0";
 BYTE mouse_buffer[4];
 BYTE joystick_buffer[4];
 BYTE keyboard_buffer[8]; 
@@ -180,8 +183,8 @@ unsigned char eeprom_data[NUM_OF_PINS][NUM_OF_SETTINGS] = {
 //ボタン全体の設定用変数
 BYTE eeprom_smpl_interval = 1;
 BYTE eeprom_check_count = 1;
-//ロータリーエンコーダ設定
-/*
+/* 
+　* ロータリーエンコーダ設定 eeprom_conv_for_renc
  * [b8,b7,b6,b5,b4,b3,b2,b1]
  * b8 未使用
  * b7 未使用
@@ -193,6 +196,7 @@ BYTE eeprom_check_count = 1;
  * b1 0:押しボタンとして扱う  1: P1/P2 をA相/B相とする
  */
 BYTE eeprom_conv_for_renc = 0;
+BYTE eeprom_check_count_renc = 1;
 
 // usbでの送信に使うバッファはここで宣言
 #pragma udata usbram2
@@ -313,6 +317,7 @@ unsigned char ToSendDataBuffer[64];
 		char fi;
 		char tmp_rotate;
 		unsigned int button_state_set_full;
+		BYTE tmp_check_count;
 		if(INTCONbits.TMR0IF == 1)
 		{
 			INTCONbits.TMR0IF = 0;
@@ -347,54 +352,62 @@ unsigned char ToSendDataBuffer[64];
 			for(fi = 0;fi < NUM_OF_PINS; fi++)
 			{
 				//ロータリーエンコーダの処理ここから
-				if(fi % 2 == 0 && ((eeprom_conv_for_renc & (0x01 << (fi/2))) ? 1:0))
+				if(((eeprom_conv_for_renc & (0x01 << (fi/2))) ? 1:0))
 				{
-					tmp_u16 = (button_state_set_full >> fi) & 0x0003;
-					//A相とB相のビットが逆順になっているのでビットを逆転
-					tmp_u16 = ((tmp_u16 & 0x0002) >> 1) | ((tmp_u16 & 0x0001) << 1);
-					//回転方向の検知（前回と今回を比較）
-					switch((renc_pre_r_code >> fi) & 0x0003)
+					if(fi % 2 == 0)
 					{
-						case 0: tmp_rotate = (tmp_u16 == 0) ?  0 : (tmp_u16 == 1) ?  1 : (tmp_u16 == 2) ? -1 : -2; break;
-						case 1: tmp_rotate = (tmp_u16 == 0) ? -1 : (tmp_u16 == 1) ?  0 : (tmp_u16 == 2) ?  3 :  1; break;
-						case 2: tmp_rotate = (tmp_u16 == 0) ?  1 : (tmp_u16 == 1) ? -2 : (tmp_u16 == 2) ?  0 : -1; break;
-						case 3: tmp_rotate = (tmp_u16 == 0) ? -2 : (tmp_u16 == 1) ? -1 : (tmp_u16 == 2) ?  1 :  0; break;
+						tmp_u16 = (button_state_set_full >> fi) & 0x0003;
+						//A相とB相のビットが逆順になっているのでビットを逆転
+						tmp_u16 = ((tmp_u16 & 0x0002) >> 1) | ((tmp_u16 & 0x0001) << 1);
+						//回転方向の検知（前回と今回を比較）
+						switch((renc_pre_r_code >> fi) & 0x0003)
+						{
+							case 0: tmp_rotate = (tmp_u16 == 0) ?  0 : (tmp_u16 == 1) ?  1 : (tmp_u16 == 2) ? -1 : -2; break;
+							case 1: tmp_rotate = (tmp_u16 == 0) ? -1 : (tmp_u16 == 1) ?  0 : (tmp_u16 == 2) ? -2 :  1; break;
+							case 2: tmp_rotate = (tmp_u16 == 0) ?  1 : (tmp_u16 == 1) ? -2 : (tmp_u16 == 2) ?  0 : -1; break;
+							case 3: tmp_rotate = (tmp_u16 == 0) ? -2 : (tmp_u16 == 1) ? -1 : (tmp_u16 == 2) ?  1 :  0; break;
+						}
+						//ボタンの押下状態に反映
+						button_state_set_full &= ~((unsigned int)0x0003 << fi);
+						switch(tmp_rotate)
+						{
+							case 0: //静止（A相＝0、B相＝0として扱う）
+								renc_pre_result &= ~((unsigned int)0x0003 << fi);
+								break;
+							case 1: //正転（A相＝1、B相＝0として扱う）
+								button_state_set_full |= ((unsigned int)0x0001 << fi);
+								renc_pre_result &= ~((unsigned int)0x0003 << fi);
+								renc_pre_result |= ((unsigned int)0x0001 << fi);
+								break;
+							case -1: //逆転（A相＝0、B相＝1として扱う）
+								button_state_set_full |= ((unsigned int)0x0002 << fi);
+								renc_pre_result &= ~((unsigned int)0x0003 << fi);
+								renc_pre_result |= ((unsigned int)0x0002 << fi);
+								break;
+							case -2: //無効（オーバースピードエラー。読みこぼしを防ぐために前回と同じように扱う）
+								button_state_set_full |= (renc_pre_result & ((unsigned int)0x0003 << fi));
+								break;
+						}
+						//次の回転方向の検知に使用するコードを保存
+						renc_pre_r_code &= ~((unsigned int)0x0003 << fi);
+						renc_pre_r_code |= (tmp_u16 << fi);
 					}
-					//ボタンの押下状態に反映
-					button_state_set_full &= ~((unsigned int)0x0003 << fi);
-					switch(tmp_rotate)
-					{
-						case 0: //静止（A相＝0、B相＝0として扱う）
-							renc_pre_result &= ~((unsigned int)0x0003 << fi);
-							break;
-						case 1: //正転（A相＝1、B相＝0として扱う）
-							button_state_set_full |= ((unsigned int)0x0001 << fi);
-							renc_pre_result &= ~((unsigned int)0x0003 << fi);
-							renc_pre_result |= ((unsigned int)0x0001 << fi);
-							break;
-						case -1: //逆転（A相＝0、B相＝1として扱う）
-							button_state_set_full |= ((unsigned int)0x0002 << fi);
-							renc_pre_result &= ~((unsigned int)0x0003 << fi);
-							renc_pre_result |= ((unsigned int)0x0002 << fi);
-							break;
-						case -2: //無効（オーバースピードエラー。読みこぼしを防ぐために前回と同じように扱う）
-							button_state_set_full |= (renc_pre_result & ((unsigned int)0x0003 << fi));
-							break;
-					}
-					//次の回転方向の検知に使用するコードを保存
-					renc_pre_r_code &= ~((unsigned int)0x0003 << fi);
-					renc_pre_r_code |= (tmp_u16 << fi);
+					tmp_check_count = eeprom_check_count_renc;
+				}
+				else
+				{
+					tmp_check_count = eeprom_check_count;
 				}
 				//ロータリーエンコーダの処理ここまで
 				if(((button_state_set_full & ((unsigned int)0x0001 << fi)) ? 1:0))
 				{ //ON
-					if (button_pressing_count[fi][STATE_ON] < eeprom_check_count)
+					if (button_pressing_count[fi][STATE_ON] < tmp_check_count)
 					{
 						button_pressing_count[fi][STATE_ON]++;
 					}
-					if (button_pressing_count[fi][STATE_ON] == eeprom_check_count)
+					if (button_pressing_count[fi][STATE_ON] == tmp_check_count)
 					{ //ONが回数分続いたのでOFF検出回数をセット。OFFが回数分続かずONに戻った場合もセットする
-						button_pressing_count[fi][STATE_OFF] = eeprom_check_count;
+						button_pressing_count[fi][STATE_OFF] = tmp_check_count;
 					}
 				}
 				else
@@ -635,6 +648,7 @@ void UserInit(void)
 	uc_temp = ReadEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS), EEPROM_SAVE_NUM, EEPROM_SAME_COUNT, &eeprom_smpl_interval);
 	uc_temp = ReadEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+1), EEPROM_SAVE_NUM, EEPROM_SAME_COUNT, &eeprom_check_count);
 	uc_temp = ReadEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+2), EEPROM_SAVE_NUM, EEPROM_SAME_COUNT, &eeprom_conv_for_renc);
+	uc_temp = ReadEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+3), EEPROM_SAVE_NUM, EEPROM_SAME_COUNT, &eeprom_check_count_renc);
 
 	if(eeprom_data[0][0] != MODE_NONE && eeprom_data[0][0] != MODE_MOUSE && eeprom_data[0][0] != MODE_KEYBOARD && eeprom_data[0][0] != MODE_JOYSTICK)
 	{//初期化されていたら、全部0にする
@@ -650,10 +664,12 @@ void UserInit(void)
 		eeprom_conv_for_renc = 1;
 		//以下の初期値は1以上にすること
 		eeprom_smpl_interval = 3;
-		eeprom_check_count = 1;
+		eeprom_check_count = 10;
+		eeprom_check_count_renc = 1;
 		uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS), eeprom_smpl_interval, EEPROM_SAVE_NUM);
 		uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+1), eeprom_check_count, EEPROM_SAVE_NUM);
 		uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+2), eeprom_conv_for_renc, EEPROM_SAVE_NUM);
+		uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+3), eeprom_check_count_renc, EEPROM_SAVE_NUM);
 	}
 	
 	//Timer0の設定（TIMER_INT_ON & T0_16BIT & T0_SOURCE_INT & T0_PS_1_32）
@@ -694,6 +710,7 @@ void ProcessIO(void)
 	char pressed_keys;
 	char tmp;
 	unsigned char uc_temp;
+	BYTE tmp_check_count;
 
     // User Application USB tasks
     if((USBDeviceState < CONFIGURED_STATE)||(USBSuspendControl==1)) return;
@@ -715,7 +732,15 @@ void ProcessIO(void)
 	
 	for(fi = 0;fi < NUM_OF_PINS ; fi++)
 	{
-		if(button_pressing_count[fi][STATE_ON] == eeprom_check_count)
+		if(((eeprom_conv_for_renc & (0x01 << (fi/2))) ? 1:0))
+		{
+			tmp_check_count = eeprom_check_count_renc;
+		}
+		else
+		{
+			tmp_check_count = eeprom_check_count;
+		}
+		if(button_pressing_count[fi][STATE_ON] == tmp_check_count)
 		{
 			switch(eeprom_data[fi][EEPROM_DATA_MODE])
 			{
@@ -968,9 +993,11 @@ void ProcessIO(void)
 			        eeprom_smpl_interval = ReceivedDataBuffer[6+NUM_OF_PINS*NUM_OF_SETTINGS];
 			        eeprom_check_count = ReceivedDataBuffer[6+NUM_OF_PINS*NUM_OF_SETTINGS+1];
 			        eeprom_conv_for_renc = ReceivedDataBuffer[6+NUM_OF_PINS*NUM_OF_SETTINGS+2];
+			        eeprom_check_count_renc = ReceivedDataBuffer[6+NUM_OF_PINS*NUM_OF_SETTINGS+3];
 					uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS), eeprom_smpl_interval, EEPROM_SAVE_NUM);
 					uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+1), eeprom_check_count, EEPROM_SAVE_NUM);
 					uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+2), eeprom_conv_for_renc, EEPROM_SAVE_NUM);
+					uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+3), eeprom_check_count_renc, EEPROM_SAVE_NUM);
 				}
                 break;
             case 0x81:  //ボタンの押下状態を返信
@@ -998,6 +1025,7 @@ void ProcessIO(void)
 					ToSendDataBuffer[NUM_OF_PINS*NUM_OF_SETTINGS+1] = eeprom_smpl_interval;
 					ToSendDataBuffer[NUM_OF_PINS*NUM_OF_SETTINGS+1+1] = eeprom_check_count;
 					ToSendDataBuffer[NUM_OF_PINS*NUM_OF_SETTINGS+1+2] = eeprom_conv_for_renc;
+					ToSendDataBuffer[NUM_OF_PINS*NUM_OF_SETTINGS+1+3] = eeprom_check_count_renc;
 
 					if(!HIDTxHandleBusy(USBInHandle))
 					{

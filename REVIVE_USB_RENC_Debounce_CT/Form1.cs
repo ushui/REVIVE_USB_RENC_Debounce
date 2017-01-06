@@ -282,6 +282,7 @@ namespace HID_PnP_Demo
         byte eeprom_smpl_interval = 1;
         byte eeprom_check_count = 1;
         byte eeprom_conv_for_renc = 0;
+        byte eeprom_check_count_renc = 1;
         bool[] ChangeAssign = Enumerable.Repeat<bool>(true, Constants.NUM_OF_PINS).ToArray();
         bool ConnectFirstTime = true;
         bool Changevalue_btn_pressed = false;
@@ -1282,14 +1283,16 @@ namespace HID_PnP_Demo
 										{
 											eeprom_smpl_interval = INBuffer[Constants.NUM_OF_PIN_SETTINGS + 2];
 											eeprom_check_count = INBuffer[Constants.NUM_OF_PIN_SETTINGS + 2 + 1];
-											eeprom_conv_for_renc = INBuffer[Constants.NUM_OF_PIN_SETTINGS + 2 + 2];
-										}
+                                            eeprom_conv_for_renc = INBuffer[Constants.NUM_OF_PIN_SETTINGS + 2 + 2];
+                                            eeprom_check_count_renc = INBuffer[Constants.NUM_OF_PIN_SETTINGS + 2 + 3];
+                                        }
 										else
 										{
 											eeprom_smpl_interval = (byte)smpl_interval_numUpDown.Value;
 											eeprom_check_count = (byte)check_count_numUpDown.Value;
                                             eeprom_conv_for_renc = RencValue_selected;
-										}
+                                            eeprom_check_count_renc = (byte)check_count_renc_numUpDown.Value;
+                                        }
 									}
 								}
 							}
@@ -1396,7 +1399,11 @@ namespace HID_PnP_Demo
                             OUTBuffer[Constants.NUM_OF_PIN_SETTINGS + 7 + 2] = RencValue_selected;
                             eeprom_conv_for_renc = RencValue_selected;
 
-							OUTBuffer[SetPin_selected * Constants.NUM_OF_SETTINGS + 7] = DeviceType_selected;
+                            tmp_num_value = (byte)check_count_renc_numUpDown.Value;
+                            OUTBuffer[Constants.NUM_OF_PIN_SETTINGS + 7 + 3] = tmp_num_value;
+                            eeprom_check_count_renc = tmp_num_value;
+
+                            OUTBuffer[SetPin_selected * Constants.NUM_OF_SETTINGS + 7] = DeviceType_selected;
 							eeprom_data[SetPin_selected * Constants.NUM_OF_SETTINGS] = DeviceType_selected;
 
 							StatusBoxChange = SetPin_selected;
@@ -1519,6 +1526,7 @@ namespace HID_PnP_Demo
                     smpl_interval_numUpDown.Value = eeprom_smpl_interval;
                     check_count_numUpDown.Value = eeprom_check_count;
                     RencValue_selected = eeprom_conv_for_renc;
+                    check_count_renc_numUpDown.Value = eeprom_check_count_renc;
                     for (int fi = 0; fi < Constants.NUM_OF_PINS / 2; fi++)
                     {
                         if ((eeprom_conv_for_renc & (0x01 << fi)) > 0)
@@ -1696,7 +1704,7 @@ namespace HID_PnP_Demo
                     StatusBox_lbl2.Text = "ê›íËÇ[ " + 
                         eeprom_smpl_interval + "ms / " + 
                         eeprom_check_count + "âÒ ]" + 
-                        "[ " + renc_update_str + " ]" + 
+                        "[ " + renc_update_str + " / " + eeprom_check_count_renc + "âÒ ]" + 
                         "[ " + SetPin_combox.Text + " / " + 
                         templbls2[StatusBoxChange].Text + " / " + 
                         templbls[StatusBoxChange].Text + " ]Ç…ïœçXÇµÇ‹ÇµÇΩ";
@@ -2476,7 +2484,7 @@ namespace HID_PnP_Demo
 
         private void RotaryEncoder5_cbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (RotaryEncoder6_cbox.Checked)
+            if (RotaryEncoder5_cbox.Checked)
             {
                 RencValue_selected |= (byte)(0x0001 << 4);
             }
@@ -2488,7 +2496,7 @@ namespace HID_PnP_Demo
 
         private void RotaryEncoder6_cbox_CheckedChanged(object sender, EventArgs e)
         {
-            if (RotaryEncoder5_cbox.Checked)
+            if (RotaryEncoder6_cbox.Checked)
             {
                 RencValue_selected |= (byte)(0x0001 << 5);
             }
