@@ -82,7 +82,7 @@ ON/OFFが確定している間の不安定な信号の揺れを無効化する�
 
 ----
 
-開発環境(ファームウェア)： MPLAB IDE v8.92、MPLAB C for PIC18 v3.47 Standard-Eval Version 
+開発環境(ファームウェア)： MPLAB IDE v8.92、MPLAB C for PIC18 v3.47 Standard-Eval Version  
 開発環境(設定ツール): Microsoft Visual C# 2010 Express  
 作成者： ushui（ゆーしゅい）  
 Twitter: [@kaede_hrc](https://twitter.com/kaede_hrc)  
