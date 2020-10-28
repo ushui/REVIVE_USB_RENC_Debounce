@@ -1,13 +1,16 @@
 // USB HID core
 /*
- * RENC Debounce ver 2.0 (2016/01/06)
+ * RENC Debounce ver 2.1 (2020/10/20)
+ *   「REVIVE USB ver 008」のアップデート内容を反映した。
+ *   デフォルトのサンプリング周期を4ms、一致検出回数を2回(ロータリーエンコーダは1回)に変更。
+ * RENC Debounce ver 2.0 (2017/01/06)
  *   ロータリーエンコーダに対して、通常とは異なる一致検出回数を設定できる機能を追加した。
  *   オーバースピードエラーの対処に抜けがあったバグを修正した。
- * RENC Debounce ver 1.2 (2016/01/05)
+ * RENC Debounce ver 1.2 (2017/01/05)
  *   PIN9以降の出力がPIN8の設定と同じになるバグなどを修正した。
- * RENC Debounce ver 1.1 (2016/01/04)
+ * RENC Debounce ver 1.1 (2017/01/04)
  *   読みこぼし防止のため、速く回しすぎたことによるオーバースピードエラーに対処した。
- * RENC Debounce ver 1.0 (2016/01/04)
+ * RENC Debounce ver 1.0 (2017/01/04)
  *   「REVIVE USB Debounce ver 1.4」をベースにロータリーエンコーダへ対応した。
  */
 
@@ -134,7 +137,7 @@ void YourLowPriorityISRCode();
 
 /** VARIABLES ******************************************************/
 #pragma udata
-char c_version[]="RD2.0";
+char c_version[]="RD2.1";
 BYTE mouse_buffer[4];
 BYTE joystick_buffer[4];
 BYTE keyboard_buffer[8]; 
@@ -661,8 +664,8 @@ void UserInit(void)
         }
         eeprom_conv_for_renc = 1;
         //以下の初期値は1以上にすること
-        eeprom_smpl_interval = 3;
-        eeprom_check_count = 10;
+        eeprom_smpl_interval = 4;
+        eeprom_check_count = 2;
         eeprom_check_count_renc = 1;
         uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS), eeprom_smpl_interval, EEPROM_SAVE_NUM);
         uc_temp = WriteEEPROM_Agree(EEPROM_SAVE_NUM*(NUM_OF_PINS*NUM_OF_SETTINGS+1), eeprom_check_count, EEPROM_SAVE_NUM);
@@ -945,7 +948,11 @@ void ProcessIO(void)
             hid_report_out_flag--;
         }
     }
-   if(!HIDTxHandleBusy(lastTransmission2))
+    if(!HIDRxHandleBusy(lastOUTTransmissionKeyboard))
+    {
+        lastOUTTransmissionKeyboard = HIDRxPacket(HID_EP3, (BYTE*)hid_report_out, HID_INT_OUT_EP_SIZE);
+    }
+    if(!HIDTxHandleBusy(lastTransmission2))
     {
         //Buttons
         joystick_input[0] = joystick_buffer[0];
