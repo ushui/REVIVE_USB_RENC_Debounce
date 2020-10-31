@@ -81,7 +81,7 @@ ON/OFFが確定している間の不安定な信号の揺れを無効化する�
    - 公式ドキュメントです。対策版とUIが異なりますが、基本的な使用方法は変わりません。
 
 #### 作例
-[REVIVE USBを使ったインテリアな自作ボルテコン](http://gurochoro.blogspot.com/2017/01/self-made-sdvx-controller.html)
+- [REVIVE USBを使ったインテリアな自作ボルテコン](http://gurochoro.blogspot.com/2017/01/self-made-sdvx-controller.html)
 
 ----
 
